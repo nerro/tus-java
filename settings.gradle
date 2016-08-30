@@ -1,0 +1,10 @@
+include "tus-java-server"
+
+rootProject.name = "tus-java"
+rootProject.children.each { project ->
+  String projectDirName = "subprojects/$project.name"
+  project.projectDir = new File(settingsDir, projectDirName)
+  project.buildFileName = "${project.name}.gradle"
+  assert project.projectDir.isDirectory()
+  assert project.buildFile.isFile()
+}

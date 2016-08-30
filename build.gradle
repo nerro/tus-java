@@ -1,0 +1,17 @@
+allprojects {
+  group = "eu.nerro"
+  version = "0.1.0-dev"
+}
+
+subprojects {
+  apply plugin: "java"
+  apply from: "${rootDir}/gradle/compile.gradle"
+  apply from: "${rootDir}/gradle/dependencies.gradle"
+  apply from: "${rootDir}/gradle/scm.gradle"
+
+  repositories {
+    jcenter()
+  }
+
+  version = rootProject.version
+}

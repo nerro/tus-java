@@ -1,0 +1,22 @@
+dependencies {
+  compile "${libraries.logback_classic}"
+  compile "${libraries.netty_all}"
+
+  testCompile "${libraries.junit}"
+}
+
+jar {
+  manifest {
+    attributes(
+      "Main-Class": "eu.nerro.tus.server.CliMain",
+      "Class-Path": configurations.getByName("compile").collect { it.name }.join(" "),
+      "Implementation-Version": gitCommitHash,
+    )
+  }
+}
+
+tasks.create(name: "copyDependencies", type: Copy) {
+  from(configurations.getByName("compile"))
+  into(libsDir)
+}
+build.dependsOn "copyDependencies"

@@ -1,0 +1,10 @@
+ext {
+  gitCommitHash = getCheckedOutGitCommitHash()
+}
+
+def getCheckedOutGitCommitHash() {
+  def gitFolder = "$rootDir/.git/"
+  def head = new File(gitFolder + "HEAD").text.split(":")
+  def isCommit = head.length == 1
+  isCommit ? head[0].trim() : new File(gitFolder + head[1].trim()).text.trim()
+}

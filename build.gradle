@@ -14,4 +14,6 @@ subprojects {
   }
 
   version = rootProject.version
+
+  test.testLogging.setExceptionFormat("full")
 }

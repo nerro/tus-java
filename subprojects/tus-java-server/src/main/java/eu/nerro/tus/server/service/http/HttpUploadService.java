@@ -28,7 +28,7 @@ public class HttpUploadService implements Service {
       ServerBootstrap bootstrap = new ServerBootstrap();
       bootstrap.group(bossGroup, workerGroup)
                .channel(NioServerSocketChannel.class)
-               .childHandler(null)
+               .childHandler(new HttpUploadServerInitializer())
                .option(SO_BACKLOG, 128)
                .childOption(SO_KEEPALIVE, true)
                .childOption(TCP_NODELAY, true);

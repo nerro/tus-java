@@ -10,6 +10,8 @@ jar {
     attributes(
       "Main-Class": "eu.nerro.tus.server.CliMain",
       "Class-Path": configurations.getByName("compile").collect { it.name }.join(" "),
+      "Implementation-Title": "TUS Java server",
+      "Implementation-Vendor": "Pavel Sorokin",
       "Implementation-Version": gitCommitHash,
     )
   }

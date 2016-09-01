@@ -24,6 +24,7 @@ public class HttpUploadService implements Service {
 
   @Override
   public void run() {
+    LOG.info("Starting '{}'", SERVICE_NAME);
     try {
       ServerBootstrap bootstrap = new ServerBootstrap();
       bootstrap.group(bossGroup, workerGroup)

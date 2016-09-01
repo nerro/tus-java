@@ -1,13 +1,11 @@
 package eu.nerro.tus.server.service.http.response;
 
-import org.junit.Test;
-
 import io.netty.handler.codec.http.*;
+import org.junit.Test;
 
 import eu.nerro.tus.server.service.http.HttpHeaders;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 
 public class OptionsResponseTest {
@@ -27,12 +25,24 @@ public class OptionsResponseTest {
   }
 
   @Test
-  public void bulid_shouldContainTusVersionHeader() {
+  public void build_shouldContainTusVersionHeader() {
     HttpRequest request = createOptionsRequest();
 
     HttpResponse response = new OptionsResponse.Builder(request).build();
+    String headerTusVersion = response.headers().get(HttpHeaders.TUS_VERSION);
 
-    assertThat(response.headers().get(HttpHeaders.TUS_VERSION), notNullValue());
+    assertThat(headerTusVersion, is(notNullValue()));
+  }
+
+  @Test
+  public void build_shouldHaveNosniffValue_forXContentTypeOptionsHeader() {
+    HttpRequest request = createOptionsRequest();
+
+    HttpResponse response = new OptionsResponse.Builder(request).build();
+    String headerXContentTypeOptions = response.headers().get(HttpHeaders.X_CONTENT_TYPE_OPTIONS);
+
+    assertThat(headerXContentTypeOptions, is(notNullValue()));
+    assertThat(headerXContentTypeOptions, equalTo("nosniff"));
   }
 
   private HttpRequest createOptionsRequest() {

@@ -15,6 +15,7 @@ public class OptionsResponse {
 
     response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.NO_CONTENT, false);
     response.headers().add(HttpHeaders.TUS_VERSION, "1.0.0");
+    response.headers().add(HttpHeaders.X_CONTENT_TYPE_OPTIONS, "nosniff");
   }
 
   public static final class Builder {

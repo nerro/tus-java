@@ -7,6 +7,8 @@ public final class HttpHeaders {
 
   public static final CharSequence HOST = HttpHeaderNames.HOST;
 
+  public static final CharSequence X_CONTENT_TYPE_OPTIONS = new AsciiString("X-Content-Type-Options");
+
   public static final CharSequence TUS_VERSION = new AsciiString("Tus-Version");
 
   private HttpHeaders() {

@@ -12,6 +12,9 @@ public class OptionsResponse {
     if (builder.request == null) {
       throw new IllegalArgumentException("OPTIONS request must not be null");
     }
+    if (!HttpMethod.OPTIONS.equals(builder.request.method())) {
+      throw new IllegalArgumentException("Http request method must be OPTIONS");
+    }
 
     response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.NO_CONTENT, false);
     response.headers().add(HttpHeaders.TUS_VERSION, "1.0.0");

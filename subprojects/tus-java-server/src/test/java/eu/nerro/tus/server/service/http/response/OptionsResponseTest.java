@@ -15,6 +15,13 @@ public class OptionsResponseTest {
     new OptionsResponse.Builder(null).build();
   }
 
+  @Test(expected = IllegalArgumentException.class)
+  public void build_shouldThrowIAE_ifRequestMethodIsNotOPTIONS() {
+    HttpRequest postRequest = new DefaultFullHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.POST, "localhost");
+
+    new OptionsResponse.Builder(postRequest).build();
+  }
+
   @Test
   public void build_shouldReturn204_onSuccess() {
     HttpRequest request = createOptionsRequest();

@@ -9,6 +9,7 @@ import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpResponse;
 import org.slf4j.Logger;
 
+import eu.nerro.tus.server.service.http.response.HeadResponse;
 import eu.nerro.tus.server.service.http.response.OptionsResponse;
 
 import static eu.nerro.tus.server.service.http.HttpLogHelper.buildSimpleLogEntryFor;
@@ -24,6 +25,8 @@ class HttpUploadServerHandler extends SimpleChannelInboundHandler<HttpRequest> {
 
     if (HttpMethod.OPTIONS.equals(request.method())) {
       response = new OptionsResponse.Builder(request).build();
+    } else if (HttpMethod.HEAD.equals(request.method())) {
+      response = new HeadResponse.Builder(request).build();
     }
 
     if (response != null) {

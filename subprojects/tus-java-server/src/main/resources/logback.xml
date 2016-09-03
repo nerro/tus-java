@@ -2,7 +2,7 @@
 <configuration>
   <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
     <encoder>
-      <pattern>[%date{"yyyy-MM-dd'T'HH:mm:ss,SSS", UTC}][%-5.5level][%logger{1}] %message%n%ex</pattern>
+      <pattern>[%date{"yyyy-MM-dd'T'HH:mm:ss,SSS", UTC}][%-5.5level][%logger{1}][%mdc{channelId}] %message%n%ex</pattern>
     </encoder>
   </appender>
 

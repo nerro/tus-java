@@ -8,6 +8,7 @@ import io.netty.handler.codec.http.HttpMethod;
 import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpResponse;
 import org.slf4j.Logger;
+import org.slf4j.MDC;
 
 import eu.nerro.tus.server.service.http.response.HeadResponse;
 import eu.nerro.tus.server.service.http.response.OptionsResponse;
@@ -21,6 +22,9 @@ class HttpUploadServerHandler extends SimpleChannelInboundHandler<HttpRequest> {
 
   @Override
   protected void channelRead0(final ChannelHandlerContext ctx, final HttpRequest request) throws Exception {
+    MDC.put("channelId", ctx.channel().id().asShortText());
+    LOG.info("Incoming request: {}", buildSimpleLogEntryFor(request));
+
     HttpResponse response = null;
 
     if (HttpMethod.OPTIONS.equals(request.method())) {
@@ -33,9 +37,11 @@ class HttpUploadServerHandler extends SimpleChannelInboundHandler<HttpRequest> {
       ChannelFuture future = ctx.write(response);
       future.addListener(ChannelFutureListener.CLOSE);
     } else {
-      LOG.warn("Unsupported http request: {}", buildSimpleLogEntryFor(request));
+      LOG.warn("Method '{}' is not supported. Close channel without building any response", request.method());
       ctx.channel().close();
     }
+
+    MDC.remove("channelId");
   }
 
   @Override

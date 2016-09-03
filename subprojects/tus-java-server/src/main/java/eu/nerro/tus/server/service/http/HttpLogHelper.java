@@ -16,8 +16,8 @@ final class HttpLogHelper {
     return new StringBuilder().append("{")
                               .append("\"method\":\"").append(request.method()).append("\",")
                               .append("\"protocol_version\":\"").append(request.protocolVersion()).append("\",")
-                              .append("\"uri\":\"").append(request.uri()).append("\",")
-                              .append("\"host\":\"").append(request.headers().get(HttpHeaders.HOST)).append("\"")
+                              .append("\"host\":\"").append(request.headers().get(HttpHeaders.HOST)).append("\",")
+                              .append("\"uri\":\"").append(request.uri()).append("\"")
                               .append("}")
                               .toString();
   }

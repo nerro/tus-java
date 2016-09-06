@@ -30,4 +30,9 @@ public enum Datastore {
 
     return UNKNOWN;
   }
+
+  @Override
+  public String toString() {
+    return value;
+  }
 }

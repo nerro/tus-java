@@ -42,7 +42,7 @@ public class CliMain {
         throw new IllegalArgumentException("No valid datastore defined: '" + datastore + "'");
     }
 
-    final Service httpUploadService = new HttpUploadService();
+    final Service httpUploadService = new HttpUploadService(store);
     ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
     scheduler.execute(httpUploadService);
 

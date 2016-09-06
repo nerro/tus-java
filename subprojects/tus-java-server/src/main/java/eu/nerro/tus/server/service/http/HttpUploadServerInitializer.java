@@ -6,7 +6,15 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.handler.codec.http.HttpRequestDecoder;
 import io.netty.handler.codec.http.HttpResponseEncoder;
 
+import eu.nerro.tus.server.store.Store;
+
 class HttpUploadServerInitializer extends ChannelInitializer<SocketChannel> {
+
+  private Store store;
+
+  HttpUploadServerInitializer(Store store) {
+    this.store = store;
+  }
 
   @Override
   protected void initChannel(SocketChannel socketChannel) throws Exception {
@@ -14,6 +22,6 @@ class HttpUploadServerInitializer extends ChannelInitializer<SocketChannel> {
 
     pipeline.addLast(new HttpRequestDecoder());
     pipeline.addLast(new HttpResponseEncoder());
-    pipeline.addLast(new HttpUploadServerHandler());
+    pipeline.addLast(new HttpUploadServerHandler(store));
   }
 }

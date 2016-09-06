@@ -12,6 +12,7 @@ import org.slf4j.MDC;
 
 import eu.nerro.tus.server.service.http.response.HeadResponse;
 import eu.nerro.tus.server.service.http.response.OptionsResponse;
+import eu.nerro.tus.server.store.Store;
 
 import static eu.nerro.tus.server.service.http.HttpLogHelper.buildSimpleLogEntryFor;
 import static org.slf4j.LoggerFactory.getLogger;
@@ -19,6 +20,13 @@ import static org.slf4j.LoggerFactory.getLogger;
 class HttpUploadServerHandler extends SimpleChannelInboundHandler<HttpRequest> {
 
   private static final Logger LOG = getLogger(HttpUploadServerHandler.class);
+
+  private Store store;
+
+  HttpUploadServerHandler(Store store) {
+    //TODO(refactoring): it's not good to pass Store from CliMain through all classes
+    this.store = store;
+  }
 
   @Override
   protected void channelRead0(final ChannelHandlerContext ctx, final HttpRequest request) throws Exception {

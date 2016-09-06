@@ -8,6 +8,7 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import org.slf4j.Logger;
 
 import eu.nerro.tus.server.service.Service;
+import eu.nerro.tus.server.store.Store;
 
 import static io.netty.channel.ChannelOption.*;
 import static org.slf4j.LoggerFactory.getLogger;
@@ -21,6 +22,11 @@ public class HttpUploadService implements Service {
 
   private EventLoopGroup bossGroup = new NioEventLoopGroup(1);
   private EventLoopGroup workerGroup = new NioEventLoopGroup();
+  private Store store;
+
+  public HttpUploadService(Store store) {
+    this.store = store;
+  }
 
   @Override
   public void run() {
@@ -29,7 +35,7 @@ public class HttpUploadService implements Service {
       ServerBootstrap bootstrap = new ServerBootstrap();
       bootstrap.group(bossGroup, workerGroup)
                .channel(NioServerSocketChannel.class)
-               .childHandler(new HttpUploadServerInitializer())
+               .childHandler(new HttpUploadServerInitializer(store))
                .option(SO_BACKLOG, 128)
                .childOption(SO_KEEPALIVE, true)
                .childOption(TCP_NODELAY, true);

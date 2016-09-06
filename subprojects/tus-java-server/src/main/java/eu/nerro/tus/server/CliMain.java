@@ -61,14 +61,14 @@ public class CliMain {
   private static Datastore getConfiguredDatastore() {
     final String datastoreConfigVar = ConfigVarHelper.getEnvValue(ConfigVar.DATASTORE);
     if (datastoreConfigVar == null || datastoreConfigVar.isEmpty()) {
-      LOG.warn("Configuration variable '{}' is not defined, use '{}' as default value", ConfigVar.DATASTORE, Datastore.FILESTORE);
+      LOG.warn("Configuration variable '{}' is not defined, fallback to '{}'", ConfigVar.DATASTORE, Datastore.FILESTORE);
       return Datastore.FILESTORE;
     }
 
     Datastore datastore = Datastore.fromValue(datastoreConfigVar);
 
     if (Datastore.UNKNOWN.equals(datastore)) {
-      LOG.warn("Environment variable '{}={}' could not be parsed, use '{}'", ConfigVar.DATASTORE, datastoreConfigVar, Datastore.FILESTORE);
+      LOG.warn("Environment variable '{}={}' could not be parsed, fallback to '{}'", ConfigVar.DATASTORE, datastoreConfigVar, Datastore.FILESTORE);
       datastore = Datastore.FILESTORE;
     }
 

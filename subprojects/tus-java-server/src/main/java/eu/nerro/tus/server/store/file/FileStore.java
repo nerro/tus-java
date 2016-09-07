@@ -18,7 +18,16 @@ import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.NANOSECONDS;
 
 /**
- *
+ * Represents an upload storage mechanism based on local file system.
+ * <p>
+ * It stores the uploads in a directory specified in two different files:
+ * <ul>
+ * <li>{@code [id].info} files are used to store {@link FileInfo}
+ * <li>{@code [id].bin} files contain the raw binary data uploaded
+ * </ul>
+ * <p>
+ * Note: no cleanup is performed so you may want to run a cronjob to ensure
+ * your disk is not filled up with old and finished uploads.
  */
 public class FileStore implements Store {
 

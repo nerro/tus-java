@@ -53,7 +53,7 @@ public class CliMain {
   }
 
   /**
-   * Reads the config {@link ConfigVar#DATASTORE} from environment variables.
+   * Returns the config {@link ConfigVar#DATASTORE} from environment variables.
    * <p>
    * <i>Note:</i> if the variable is not defined or could not be parsed,
    * then {@link Datastore#FILESTORE} will be returned as default value.
@@ -68,7 +68,7 @@ public class CliMain {
     Datastore datastore = Datastore.fromValue(datastoreConfigVar);
 
     if (Datastore.UNKNOWN.equals(datastore)) {
-      LOG.warn("Environment variable '{}={}' could not be parsed, fallback to '{}'", ConfigVar.DATASTORE, datastoreConfigVar, Datastore.FILESTORE);
+      LOG.warn("Configuration variable '{}={}' could not be parsed, fallback to '{}'", ConfigVar.DATASTORE, datastoreConfigVar, Datastore.FILESTORE);
       datastore = Datastore.FILESTORE;
     }
 

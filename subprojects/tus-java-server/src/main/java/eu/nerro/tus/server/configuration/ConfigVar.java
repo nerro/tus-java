@@ -10,5 +10,7 @@ public enum ConfigVar {
    * <li>{@code filestore}</li>
    * </ul>
    */
-  DATASTORE
+  DATASTORE,
+
+  FILESTORE_UPLOAD_DIRECTORY
 }

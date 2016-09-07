@@ -1,11 +1,76 @@
 package eu.nerro.tus.server.store.file;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import eu.nerro.tus.server.configuration.ConfigVarHelper;
 import eu.nerro.tus.server.store.FileInfo;
 import eu.nerro.tus.server.store.Store;
 
+import static eu.nerro.tus.server.configuration.ConfigVar.FILESTORE_UPLOAD_DIRECTORY;
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
+import static java.util.concurrent.TimeUnit.NANOSECONDS;
+
+/**
+ *
+ */
 public class FileStore implements Store {
 
+  private static final Logger LOG = LoggerFactory.getLogger(FileStore.class);
+
+  private static final Path CURRENT_DIRECTORY = Paths.get(".").toAbsolutePath().normalize();
+
+  private final Path uploadDirectory;
+
   public FileStore() {
+    LOG.info("File store initializing");
+    final long startTime = System.nanoTime();
+
+    uploadDirectory = getConfiguredUploadedDirectory();
+
+    final long endTime = System.nanoTime();
+    LOG.info("File store initialized in {} ms", MILLISECONDS.convert(endTime - startTime, NANOSECONDS));
+  }
+
+  private Path getConfiguredUploadedDirectory() {
+    final String uploadDirectoryConfigVar = ConfigVarHelper.getEnvValue(FILESTORE_UPLOAD_DIRECTORY);
+    if (uploadDirectoryConfigVar == null || uploadDirectoryConfigVar.isEmpty()) {
+      LOG.warn("Configuration variable '{}' is not defined, fallback to current directory '{}'", FILESTORE_UPLOAD_DIRECTORY, CURRENT_DIRECTORY);
+      return CURRENT_DIRECTORY;
+    }
+
+    final Path uploadDirectory;
+    try {
+      uploadDirectory = Paths.get(uploadDirectoryConfigVar).toAbsolutePath().normalize();
+    } catch (InvalidPathException e) {
+      LOG.warn("Path string could not be converted, fallback to current directory '{}'", CURRENT_DIRECTORY);
+      LOG.error("Configuration variable '{}={}' is not valid", FILESTORE_UPLOAD_DIRECTORY, uploadDirectoryConfigVar, e);
+      return CURRENT_DIRECTORY;
+    }
+
+    if (Files.notExists(uploadDirectory)) {
+      LOG.info("Upload directory '{}' does not exists, creating a new one", uploadDirectory);
+      try {
+        Files.createDirectory(uploadDirectory);
+      } catch (IOException e) {
+        LOG.error("Could not create upload directory '{}', fallback to current directory '{}'", uploadDirectory, CURRENT_DIRECTORY, e);
+        return CURRENT_DIRECTORY;
+      }
+    }
+
+    if (!Files.isWritable(uploadDirectory)) {
+      LOG.warn("Upload directory '{}' is not writable, fallback to current directory '{}'", uploadDirectory, CURRENT_DIRECTORY);
+      return CURRENT_DIRECTORY;
+    }
+
+    LOG.info("Use '{}' as upload directory", uploadDirectory);
+    return uploadDirectory;
   }
 
   @Override

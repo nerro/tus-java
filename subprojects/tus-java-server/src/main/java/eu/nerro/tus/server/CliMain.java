@@ -3,7 +3,6 @@ package eu.nerro.tus.server;
 import java.util.Collections;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 
@@ -17,6 +16,8 @@ import eu.nerro.tus.server.store.Datastore;
 import eu.nerro.tus.server.store.Store;
 import eu.nerro.tus.server.store.Stores;
 
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
+import static java.util.concurrent.TimeUnit.NANOSECONDS;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class CliMain {
@@ -49,7 +50,7 @@ public class CliMain {
     Runtime.getRuntime().addShutdownHook(new Thread(new ShutdownHookService(Collections.singletonList(httpUploadService))));
 
     final long endTime = System.nanoTime();
-    LOG.info("TUS Java server started in {} ms", TimeUnit.MILLISECONDS.convert(endTime - startTime, TimeUnit.NANOSECONDS));
+    LOG.info("TUS Java server started in {} ms", MILLISECONDS.convert(endTime - startTime, NANOSECONDS));
   }
 
   /**

@@ -1,10 +1,11 @@
 package eu.nerro.tus.server.service;
 
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
+import static java.util.concurrent.TimeUnit.NANOSECONDS;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class ShutdownHookService implements Runnable {
@@ -25,6 +26,6 @@ public class ShutdownHookService implements Runnable {
     services.forEach(Service::stop);
 
     final long endTime = System.nanoTime();
-    LOG.info("TUS Java server stopped in {} ms", TimeUnit.MILLISECONDS.convert(endTime - startTime, TimeUnit.NANOSECONDS));
+    LOG.info("TUS Java server stopped in {} ms", MILLISECONDS.convert(endTime - startTime, NANOSECONDS));
   }
 }

@@ -1,21 +1,23 @@
 package eu.nerro.tus.server.store.file;
 
+import java.io.BufferedWriter;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.UUID;
 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import eu.nerro.tus.server.configuration.ConfigVarHelper;
+import eu.nerro.tus.server.exception.TusException;
 import eu.nerro.tus.server.store.FileInfo;
 import eu.nerro.tus.server.store.Store;
 
 import static eu.nerro.tus.server.configuration.ConfigVar.FILESTORE_UPLOAD_DIRECTORY;
-import static java.util.concurrent.TimeUnit.MILLISECONDS;
-import static java.util.concurrent.TimeUnit.NANOSECONDS;
+import static org.slf4j.LoggerFactory.getLogger;
 
 /**
  * Represents an upload storage mechanism based on local file system.
@@ -31,7 +33,7 @@ import static java.util.concurrent.TimeUnit.NANOSECONDS;
  */
 public class FileStore implements Store {
 
-  private static final Logger LOG = LoggerFactory.getLogger(FileStore.class);
+  private static final Logger LOG = getLogger(FileStore.class);
 
   private static final Path CURRENT_DIRECTORY = Paths.get(".").toAbsolutePath().normalize();
 

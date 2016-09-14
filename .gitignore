@@ -20,6 +20,8 @@ gradle-app.setting
 #################################
 # Logs and temp files           #
 #################################
+*.bin
+*.info
 *.log
 *.swp
 *~

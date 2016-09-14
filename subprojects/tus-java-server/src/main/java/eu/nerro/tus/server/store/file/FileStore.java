@@ -40,16 +40,45 @@ public class FileStore implements Store {
   private final Path uploadDirectory;
 
   public FileStore() {
-    LOG.info("File store initializing");
-    final long startTime = System.nanoTime();
-
-    uploadDirectory = getConfiguredUploadedDirectory();
-
-    final long endTime = System.nanoTime();
-    LOG.info("File store initialized in {} ms", MILLISECONDS.convert(endTime - startTime, NANOSECONDS));
+    uploadDirectory = getConfiguredUploadDirectory();
   }
 
-  private Path getConfiguredUploadedDirectory() {
+  @Override
+  public String createNewUpload(FileInfo fileInfo) {
+    if (fileInfo == null) {
+      throw new IllegalArgumentException("'fileInfo' must not be null or empty");
+    }
+
+    String uploadId = UUID.randomUUID().toString();
+    fileInfo.setId(uploadId);
+
+    // create .bin file with no content
+    Path binFile = getPathForBinFile(uploadId);
+    if (Files.exists(binFile)) {
+      throw new TusException("Cannot create new upload because file already exists");
+    }
+    try (BufferedWriter writer = Files.newBufferedWriter(binFile, Charset.forName("UTF-8"))) {
+      writer.write(fileInfo.toString(), 0, fileInfo.toString().length());
+    } catch (IOException e) {
+      throw new TusException("Could not create upload .bin file", e);
+    }
+
+    writeFileInfo(uploadId, fileInfo);
+
+    return uploadId;
+  }
+
+  @Override
+  public long writeChunk(String id, long offset) {
+    return 0;
+  }
+
+  @Override
+  public FileInfo getFileInfo(String id) {
+    return null;
+  }
+
+  private Path getConfiguredUploadDirectory() {
     final String uploadDirectoryConfigVar = ConfigVarHelper.getEnvValue(FILESTORE_UPLOAD_DIRECTORY);
     if (uploadDirectoryConfigVar == null || uploadDirectoryConfigVar.isEmpty()) {
       LOG.warn("Configuration variable '{}' is not defined, fallback to current directory '{}'", FILESTORE_UPLOAD_DIRECTORY, CURRENT_DIRECTORY);
@@ -84,18 +113,23 @@ public class FileStore implements Store {
     return uploadDirectory;
   }
 
-  @Override
-  public String createNewUpload(FileInfo fileInfo) {
-    return null;
+  private Path getPathForBinFile(String uploadId) {
+    if (uploadId == null || uploadId.isEmpty()) {
+      throw new IllegalArgumentException("'uploadId' must not be null or empty");
+    }
+
+    return Paths.get(uploadDirectory.toString(), uploadId + ".bin");
   }
 
-  @Override
-  public long writeChunk(String id, long offset) {
-    return 0;
+  private Path getPathForInfoFile(String uploadId) {
+    if (uploadId == null || uploadId.isEmpty()) {
+      throw new IllegalArgumentException("'uploadId' must not be null or empty");
+    }
+
+    return Paths.get(uploadDirectory.toString(), uploadId + ".info");
   }
 
-  @Override
-  public FileInfo getFileInfo(String id) {
-    return null;
+  private void writeFileInfo(String uploadId, FileInfo fileInfo) {
+    //TODO: choose file format (json, binary or property file)
   }
 }

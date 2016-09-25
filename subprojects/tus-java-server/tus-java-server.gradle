@@ -18,6 +18,7 @@ jar {
 }
 
 tasks.create(name: "copyDependencies", type: Copy) {
+  description "Copies dependencies of this project to the build directory."
   from(configurations.getByName("compile"))
   into(libsDir)
 }
